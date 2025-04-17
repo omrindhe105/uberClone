@@ -17,9 +17,9 @@
 
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
         
-        req.user = await userModel.findById(decoded._id);
+        req.captain = await userModel.findById(decoded._id);
       
-        if (!req.user) {
+        if (!req.captain) {
             return res.status(404).json({ message: 'User not found' });
         }
 

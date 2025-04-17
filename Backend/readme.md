@@ -260,3 +260,156 @@ Authorization: Bearer <token>
 - **200**: Request successful.
 - **401**: Unauthorized (missing or invalid token).
 - **404**: User not found (for `/user/userProfile`).
+
+# Captain Registration Endpoint Documentation
+
+## Endpoint: `/captain/register`
+
+### Method: `POST`
+
+### Description:
+This endpoint is used to register a new captain in the system. It accepts captain details such as full name, email, password, and vehicle information, hashes the password, and stores the captain in the database.
+
+---
+
+### Request Body:
+The following fields are required in the request body:
+
+```json
+{
+  "fullName": {
+    "firstName": "string",
+    "lastName": "string"
+  },
+  "email": "string",
+  "password": "string",
+  "vehicle": {
+    "color": "string",
+    "capacity": "number",
+    "plateNumber": "string",
+    "vehicleType": "string"
+  }
+}
+```
+
+#### Field Descriptions:
+- **fullName.firstName**: The first name of the captain (required, minimum 2 characters, maximum 20 characters).
+- **fullName.lastName**: The last name of the captain (required, minimum 2 characters, maximum 20 characters).
+- **email**: The email address of the captain (required, must be unique and valid).
+- **password**: The password for the captain's account (required, minimum 6 characters).
+- **vehicle.color**: The color of the captain's vehicle (required).
+- **vehicle.capacity**: The seating capacity of the vehicle (required, must be a number).
+- **vehicle.plateNumber**: The license plate number of the vehicle (required).
+- **vehicle.vehicleType**: The type of vehicle (required, must be one of `car`, `bike`, or `auto`).
+
+---
+
+### Response:
+
+#### Success (201):
+If the captain is successfully registered, the server responds with:
+```json
+{
+  "captain": {
+    "_id": "string",
+    "fullName": {
+      "firstName": "string",
+      "lastName": "string"
+    },
+    "email": "string",
+    "vehicle": {
+      "color": "string",
+      "capacity": "number",
+      "plateNumber": "string",
+      "vehicleType": "string"
+    }
+  }
+}
+```
+
+#### Error (400):
+If any required field is missing or invalid, the server responds with:
+```json
+{
+  "errors": [
+    {
+      "msg": "Error message",
+      "param": "field_name",
+      "location": "body"
+    }
+  ]
+}
+```
+
+#### Error (500):
+If there is an internal server error, the server responds with:
+```json
+{
+  "error": "Internal Server Error",
+  "details": "Error details"
+}
+```
+
+---
+
+### Example Request:
+```bash
+POST /captain/register
+Content-Type: application/json
+
+{
+  "fullName": {
+    "firstName": "Amit",
+    "lastName": "Kumar"
+  },
+  "email": "amit.kumar@example.com",
+  "password": "securepassword123",
+  "vehicle": {
+    "color": "Black",
+    "capacity": 4,
+    "plateNumber": "DL8CAF1234",
+    "vehicleType": "car"
+  }
+}
+```
+
+### Example Response (Success):
+```json
+{
+  "captain": {
+    "_id": "643f1c2e5e3b2a001c8e4f9a",
+    "fullName": {
+      "firstName": "Amit",
+      "lastName": "Kumar"
+    },
+    "email": "amit.kumar@example.com",
+    "vehicle": {
+      "color": "Black",
+      "capacity": 4,
+      "plateNumber": "DL8CAF1234",
+      "vehicleType": "car"
+    }
+  }
+}
+```
+
+### Example Response (Error):
+```json
+{
+  "errors": [
+    {
+      "msg": "Invalid email",
+      "param": "email",
+      "location": "body"
+    }
+  ]
+}
+```
+
+---
+
+### Notes:
+- Ensure the `email` is unique and valid.
+- The `password` must be strong and at least 6 characters long.
+- The `vehicleType` must be one of the allowed values: `car`, `bike`, or `auto`.
+
